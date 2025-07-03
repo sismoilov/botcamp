@@ -14,7 +14,7 @@ const app = express();
 // Routers bootcamp
 const bootcamp = require('./routes/bootcamp');
 
-//body parser
+//body parserty
 app.use(express.json());
 
 
