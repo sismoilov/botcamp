@@ -13,6 +13,7 @@ const app = express();
 
 // Routers bootcamp
 const bootcamp = require('./routes/bootcamp');
+const course = require('./routes/course');
 
 //body parserty
 app.use(express.json());
@@ -25,8 +26,11 @@ if(process.env.NODE_ENV === 'development'){
 
 //moount routers
 app.use('/api/bootcamp', bootcamp);
+app.use('/api/courses', course);
 // error middleware
 app.use(errorHandler);
+
+app.set('query parser', 'extended');
 
  
 

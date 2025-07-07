@@ -76,7 +76,10 @@ const BootcampSchema = new mongoose.Schema({
         max: [10, 'Rating can not be more than 10'],
      },
 
-     averageCost: Number,
+     averageCost: {
+        type: Number
+     },
+     
      photo: {
         type: String,
         default: 'no-photo.jpg'
@@ -102,6 +105,10 @@ const BootcampSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
      }
+}, 
+{ 
+    toJSON: {virtuals: true},
+    toObject: {virtuals: true}
 });
 
 BootcampSchema.pre('save', function(next){
@@ -126,6 +133,19 @@ BootcampSchema.pre('save', async function(next){
     this.address = undefined;
 
     next();
+});
+// cascade delete courses when bootcamp is deleted
+BootcampSchema.pre('deleteOne', {document: true, query: false} ,async function(next){
+    console.log(`Course being removed from bootcamp  ${this._id}`);
+    await this.model('Course').deleteMany({bootcamp: this._id});
+    next();
 })
+// reverse populate with vurtuals
+BootcampSchema.virtual('course', {
+    ref: 'Course',
+    localField: '_id',
+    foreignField: 'bootcamp',
+    justOne: false
+});
 
 module.exports = mongoose.model('Bootcamp', BootcampSchema);
