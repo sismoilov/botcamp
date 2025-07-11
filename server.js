@@ -1,4 +1,6 @@
 const express = require('express');
+const path = require('path')
+const fileupload = require('express-fileupload')
 const dotenv = require('dotenv');
 const morgan = require('morgan');
 const connectDB = require('./config/db');
@@ -19,10 +21,16 @@ const course = require('./routes/course');
 app.use(express.json());
 
 
+
 // dev logging middleware
 if(process.env.NODE_ENV === 'development'){
     app.use(morgan('dev'));
 }
+// file uploading
+app.use(fileupload())
+
+//set static folder
+app.use(express.static(path.join(__dirname, 'public')))
 
 //moount routers
 app.use('/api/bootcamp', bootcamp);
