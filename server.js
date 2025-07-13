@@ -1,6 +1,7 @@
 const express = require('express');
 const path = require('path')
 const fileupload = require('express-fileupload')
+const cookieParser = require('cookie-parser');
 const dotenv = require('dotenv');
 const morgan = require('morgan');
 const connectDB = require('./config/db');
@@ -20,6 +21,9 @@ const auth = require('./routes/auth');
 
 //body parserty
 app.use(express.json());
+
+//cookie parser
+app.use(cookieParser())
 
 
 
