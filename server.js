@@ -18,6 +18,7 @@ const app = express();
 const bootcamp = require('./routes/bootcamp');
 const course = require('./routes/course');
 const auth = require('./routes/auth');
+const users = require('./routes/users');
 
 //body parserty
 app.use(express.json());
@@ -41,6 +42,7 @@ app.use(express.static(path.join(__dirname, 'public')))
 app.use('/api/bootcamp', bootcamp);
 app.use('/api/courses', course);
 app.use('/api/auth', auth);
+app.use('/api/auth/users', users);
 // error middleware
 app.use(errorHandler);
 
