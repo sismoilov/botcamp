@@ -5,6 +5,12 @@ const cookieParser = require('cookie-parser');
 const dotenv = require('dotenv');
 const morgan = require('morgan');
 const connectDB = require('./config/db');
+// const mongoSanitize = require('express-mongo-sanitize');
+const xss = require('xss-clean')
+const helmet = require('helmet');
+const hpp = require('hpp');
+const rateLimit = require('express-rate-limit')
+const cors = require('cors')
 const colors = require('colors');
 const errorHandler = require('./middleware/error');
 //dotenv path
@@ -19,12 +25,32 @@ const bootcamp = require('./routes/bootcamp');
 const course = require('./routes/course');
 const auth = require('./routes/auth');
 const users = require('./routes/users');
+const reviews = require('./routes/reviews');
 
 //body parserty
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
+//Sanitize data
+// app.use(mongoSanitize())-------------------------------
+
+//api security
+app.use(helmet())
+// app.use(xss());---------------------------------
+
+const limiter = rateLimit({
+    windowMs: 10 * 60 * 1000,
+    max:100
+})
+app.use(limiter)
+// app.use(hpp())-------------------------------------
+
+//enable cors
+app.use(cors())
 //cookie parser
 app.use(cookieParser())
+
+
 
 
 
@@ -35,6 +61,7 @@ if(process.env.NODE_ENV === 'development'){
 // file uploading
 app.use(fileupload())
 
+
 //set static folder
 app.use(express.static(path.join(__dirname, 'public')))
 
@@ -43,6 +70,7 @@ app.use('/api/bootcamp', bootcamp);
 app.use('/api/courses', course);
 app.use('/api/auth', auth);
 app.use('/api/auth/users', users);
+app.use('/api/reviews', reviews);
 // error middleware
 app.use(errorHandler);
 
